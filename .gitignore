@@ -1,0 +1,8 @@
+_assets/
+_extract_docx.py
+_extract_deep.py
+**/__pycache__/
+*.pyc
+~$*
+.DS_Store
+Thumbs.db
