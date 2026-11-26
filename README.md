@@ -2,7 +2,7 @@
 
 **UIDE · Gestión de Proyectos de TI · Buzón Habilitante GA-1.5 (Fase I / Ready for Planning)**
 
-Repositorio **privado** del equipo consultor con la evidencia documental completa para la compuerta RfP.
+Expediente del equipo consultor para la compuerta RfP. El repositorio está **privado**. Para la entrega al tribunal se requiere un enlace que abra sin iniciar sesión.
 
 ## Equipo
 
@@ -12,17 +12,19 @@ Repositorio **privado** del equipo consultor con la evidencia documental complet
 | Freddy Emanuel Guaman Gonzalez | Product Owner (PO) |
 | Franco Rene Quezada Ordoñez | Arquitecto de Software / Risk Manager |
 
-## Entregables (completos)
+## Entregables
 
 | Archivo | Descripción |
 |---|---|
+| `docs/Dossier_Ejecutivo_GA15_FaseI_RfP.pdf` | Dossier institucional para la entrega |
 | `docs/Dossier_Ejecutivo_GA15_FaseI_RfP.docx` | Dossier ejecutivo formal (portada + Cap. 1–4) |
 | `docs/Plan_Gestion_Riesgos_referencia.docx` | Plan de riesgos detallado de respaldo |
 | `diagrams/EDT_WBS_FaseI.drawio` | EDT vectorial editable (3 niveles) |
 | `diagrams/EDT_WBS_FaseI.png` | EDT en PNG de alta resolución |
 | `diagrams/Red_CPM_FaseI.png` | Diagrama de red de actividades (ruta crítica en rojo) |
+| `diagrams/Matriz_Riesgos_5x5.png` | Matriz en escala de grises con los ocho riesgos |
 | `schedule/Cronograma_CPM_FaseI.gan` | Cronograma CPM editable (GanttProject) |
-| `schedule/Cronograma_CPM_FaseI.pdf` | PDF del CPM con ruta crítica en rojo + holguras |
+| `schedule/Cronograma_CPM_FaseI.pdf` | Gantt exportado desde GanttProject y anexo con fechas y holguras |
 | `slides/Defensa_Ejecutiva_GA15_RfP.pdf` | Diapositivas ejecutivas de defensa (**7 láminas**) |
 | `assets/logo_uide.jpeg` | Logotipo institucional UIDE |
 

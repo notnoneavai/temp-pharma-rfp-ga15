@@ -66,34 +66,63 @@ def compute_schedule():
     return es, ef
 
 
+def predecessors():
+    return {aid: incoming for aid, _, _, incoming, _ in ACTIVITIES}
+
+
+def successors():
+    return {
+        aid: [other for other, incoming in predecessors().items() if aid in incoming]
+        for aid, *_ in ACTIVITIES
+    }
+
+
+def cpm_rows():
+    early_start, early_finish = compute_schedule()
+    outgoing = successors()
+    project_finish = max(early_finish.values())
+    late_start, late_finish = {}, {}
+    for aid, _, duration, _, _ in reversed(ACTIVITIES):
+        late_finish[aid] = min((late_start[s] for s in outgoing[aid]), default=project_finish)
+        late_start[aid] = late_finish[aid] - duration
+    return {
+        aid: (early_start[aid], early_finish[aid], late_start[aid], late_finish[aid],
+              late_start[aid] - early_start[aid])
+        for aid, *_ in ACTIVITIES
+    }
+
+
+def activity_code(aid):
+    return chr(ord("A") + aid - 1)
+
+
 def task_xml():
-    es, ef = compute_schedule()
+    rows = cpm_rows()
+    outgoing = successors()
     lines = []
-    dep_id = 1
-    for aid, name, dur, preds, critical in ACTIVITIES:
-        start = START if es[aid] == 0 else add_business_days(START, es[aid])
-        # GanttProject uses start date and duration; color for critical = red
-        color = "#ff0000" if critical else "#800040"
+    for aid, name, dur, _, _ in ACTIVITIES:
+        start = add_business_days(START, rows[aid][0])
+        critical = rows[aid][4] == 0
+        color = "#b52222" if critical else "#747474"
         lines.append(
             f'      <task id="{aid}" name="{name}" color="{color}" '
             f'meeting="false" start="{start.isoformat()}" duration="{dur}" '
             f'complete="0" expand="true">'
         )
-        for p in preds:
+        for successor in outgoing[aid]:
             lines.append(
-                f'        <depend id="{dep_id}" type="2" difference="0" hardness="Strong" dependee-id="{p}"/>'
+                f'        <depend id="{successor}" type="2" difference="0" hardness="Strong"/>'
             )
-            dep_id += 1
         # custom property tip
         tip = "RUTA CRITICA (holgura=0)" if critical else "Holgura > 0"
         lines.append(f'        <customproperty taskproperty-id="tpc0" value="{tip}"/>')
         lines.append("      </task>")
-    return "\n".join(lines), max(ef.values())
+    return "\n".join(lines), max(row[1] for row in rows.values())
 
 
 def build():
     tasks, project_days = task_xml()
-    finish = add_business_days(START, project_days)
+    finish = add_business_days(START, project_days - 1)
     xml = f'''<?xml version="1.0" encoding="UTF-8"?>
 <project name="CPM Fase I — Registro temperatura farmacias (RfP)"
          company="UIDE · Equipo Consultor GA-1.5"
@@ -109,6 +138,18 @@ def build():
     ES/EF/LS/LF y holguras documentadas en el Dossier Ejecutivo.
     Inicio: {START.isoformat()} · Fin estimado camino critico: {finish.isoformat()}.
   </description>
+  <view zooming-state="default:6" id="gantt-chart">
+    <field id="tpd3" name="Nombre" width="265" order="0"/>
+    <field id="tpd4" name="Inicio" width="90" order="1"/>
+    <field id="tpd5" name="Fin" width="90" order="2"/>
+  </view>
+  <calendars>
+    <day-types>
+      <day-type id="0"/>
+      <day-type id="1"/>
+      <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+    </day-types>
+  </calendars>
   <tasks empty-milestones="true">
     <taskproperties>
       <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
