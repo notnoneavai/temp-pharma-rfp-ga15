@@ -2,7 +2,7 @@
 
 **UIDE · Gestión de Proyectos de TI · Buzón Habilitante GA-1.5 (Fase I / Ready for Planning)**
 
-Repositorio **privado** del equipo consultor. Contiene la evidencia documental auditable para la compuerta RfP.
+Repositorio **privado** del equipo consultor con la evidencia documental completa para la compuerta RfP.
 
 ## Equipo
 
@@ -12,30 +12,30 @@ Repositorio **privado** del equipo consultor. Contiene la evidencia documental a
 | Freddy Emanuel Guaman Gonzalez | Product Owner (PO) |
 | Franco Rene Quezada Ordoñez | Arquitecto de Software / Risk Manager |
 
-## Estructura
+## Entregables (completos)
 
-```
-docs/          Dossier ejecutivo Word + plan de riesgos de referencia
-diagrams/      EDT/WBS vectorial (.drawio)
-schedule/      Cronograma CPM editable (.gan — GanttProject)
-slides/        Diapositivas de defensa (máx. 7 láminas; pendiente PDF)
-assets/        Logo institucional UIDE
-scripts/       Generadores del dossier y del .gan
-```
+| Archivo | Descripción |
+|---|---|
+| `docs/Dossier_Ejecutivo_GA15_FaseI_RfP.docx` | Dossier ejecutivo formal (portada + Cap. 1–4) |
+| `docs/Plan_Gestion_Riesgos_referencia.docx` | Plan de riesgos detallado de respaldo |
+| `diagrams/EDT_WBS_FaseI.drawio` | EDT vectorial editable (3 niveles) |
+| `diagrams/EDT_WBS_FaseI.png` | EDT en PNG de alta resolución |
+| `diagrams/Red_CPM_FaseI.png` | Diagrama de red de actividades (ruta crítica en rojo) |
+| `schedule/Cronograma_CPM_FaseI.gan` | Cronograma CPM editable (GanttProject) |
+| `schedule/Cronograma_CPM_FaseI.pdf` | PDF del CPM con ruta crítica en rojo + holguras |
+| `slides/Defensa_Ejecutiva_GA15_RfP.pdf` | Diapositivas ejecutivas de defensa (**7 láminas**) |
+| `assets/logo_uide.jpeg` | Logotipo institucional UIDE |
 
-## Entregables clave
+## Línea base de costo
 
-1. `docs/Dossier_Ejecutivo_GA15_FaseI_RfP.docx` — Portada, Capítulos 1–4
-2. `diagrams/EDT_WBS_FaseI.drawio` — EDT a 3 niveles (regla del 100 %)
-3. `schedule/Cronograma_CPM_FaseI.gan` — CPM con ruta crítica en rojo
-4. `slides/` — Reservado para la defensa oral GA-1.5
+**USD 8.102,50** = Costo directo EDT (6.000) + Reserva de contingencia EMV (2.102,50)
 
 ## Cómo abrir los fuentes
 
 - **Word:** Microsoft Word / LibreOffice Writer  
 - **EDT:** [diagrams.net](https://app.diagrams.net/) → Abrir `.drawio`  
-- **Cronograma:** [GanttProject](https://www.ganttproject.biz/) → Abrir `.gan` → Exportar PDF (ruta crítica ya en rojo)
+- **Cronograma:** [GanttProject](https://www.ganttproject.biz/) → Abrir `.gan`  
 
-## Proyecto
+## Repo
 
-Registro continuo de temperatura para farmacias independientes, con alertas fuera de rango, buffer offline y evidencia inalterable alineada a la guía ARCSA y a LOPDP.
+https://github.com/notnoneavai/temp-pharma-rfp-ga15

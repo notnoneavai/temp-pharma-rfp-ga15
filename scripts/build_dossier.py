@@ -10,11 +10,13 @@ from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from docx.shared import Cm, Pt, RGBColor
+from docx.shared import Cm, Inches, Pt, RGBColor
 
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / "Plan de Gestión de Riesgos - Farmacias corregido.docx"
 OUT = ROOT / "docs" / "Dossier_Ejecutivo_GA15_FaseI_RfP.docx"
+EDT_PNG = ROOT / "diagrams" / "EDT_WBS_FaseI.png"
+NET_PNG = ROOT / "diagrams" / "Red_CPM_FaseI.png"
 REPO_URL = "https://github.com/notnoneavai/temp-pharma-rfp-ga15"
 
 MAROON = RGBColor(0x80, 0x00, 0x40)
@@ -306,7 +308,7 @@ def build():
     for t in [
         "Presupuesto base de costo directo: USD 6.000 (techo de la línea base antes de contingencia).",
         "Plazo duro de evidencia documental: 26/11/2026 23:59.",
-        "Alcance estricto Fase I: gobernanza, EDT, CPM, riesgos cuantitativos y presupuesto; sin PDF de defensa en este buzón aún.",
+        "Alcance estricto Fase I: gobernanza, EDT, CPM, riesgos cuantitativos, presupuesto y evidencia de defensa (≤7 láminas).",
         "Cumplimiento LOPDP: no capturar datos de pacientes; solo telemetría de equipos y trazas de operadores autorizados.",
     ]:
         add_p(doc, f"• {t}", size=10, space_after=2)
@@ -375,9 +377,23 @@ def build():
     add_h(doc, "2.1 Diagrama EDT a 3 niveles (regla del 100 %)", 2)
     add_p(
         doc,
-        "La EDT se organiza por entregables. El archivo vectorial editable está en diagrams/EDT_WBS_FaseI.drawio "
-        "(compatible con diagrams.net). Cumple la regla del 100 %: la suma de los componentes hijos equivale al padre.",
+        "La EDT se organiza por entregables. Archivos de respaldo: diagrams/EDT_WBS_FaseI.drawio (vectorial editable "
+        "en diagrams.net) y diagrams/EDT_WBS_FaseI.png (alta resolución). Cumple la regla del 100 %: la suma de los "
+        "componentes hijos equivale al padre.",
     )
+    if EDT_PNG.exists():
+        p = add_p(doc, "", space_after=4)
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.add_run().add_picture(str(EDT_PNG), width=Inches(6.3))
+        add_p(
+            doc,
+            "Figura 1. EDT/WBS a 3 niveles jerárquicos (regla del 100 %).",
+            size=9,
+            italic=True,
+            align=WD_ALIGN_PARAGRAPH.CENTER,
+            space_after=8,
+        )
+
     add_p(doc, "Estructura jerárquica", bold=True)
     wbs_lines = [
         "1. Proyecto — Registro automático y auditable de temperatura para farmacias",
@@ -514,10 +530,22 @@ def build():
     add_h(doc, "3.2 Diagrama de red, ruta crítica y holguras", 2)
     add_p(
         doc,
-        "Ruta crítica (holgura total = 0), marcada en rojo en el archivo GanttProject: "
+        "Ruta crítica (holgura total = 0), marcada en rojo en GanttProject/PDF: "
         "A → C → D → G → H → J → K → L. Duración del camino crítico: 3+5+4+5+4+3+2+2 = 28 días hábiles.",
         space_after=4,
     )
+    if NET_PNG.exists():
+        p = add_p(doc, "", space_after=4)
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.add_run().add_picture(str(NET_PNG), width=Inches(6.3))
+        add_p(
+            doc,
+            "Figura 2. Diagrama de red de actividades (CPM). En rojo: ruta crítica.",
+            size=9,
+            italic=True,
+            align=WD_ALIGN_PARAGRAPH.CENTER,
+            space_after=8,
+        )
     add_table(
         doc,
         ["ID", "ES", "EF", "LS", "LF", "Holgura total", "¿Crítica?"],
@@ -538,8 +566,9 @@ def build():
     )
     add_p(
         doc,
-        "Nota de entrega. En este buzón se entrega el fuente .gan editable. La exportación PDF del Gantt con "
-        "ruta crítica en rojo se generará desde GanttProject para la defensa oral (GA-1.5), según acuerdo del equipo.",
+        "Entrega dual del cronograma: schedule/Cronograma_CPM_FaseI.gan (fuente editable GanttProject, barras críticas "
+        "en rojo) y schedule/Cronograma_CPM_FaseI.pdf (exportación legible con ruta crítica en rojo, fechas ES/EF/LS/LF "
+        "y tabla de holguras totales).",
         size=9,
         italic=True,
         space_after=10,
@@ -620,7 +649,9 @@ def build():
             ["docs/Plan_Gestion_Riesgos_referencia.docx", "Plan de riesgos detallado de respaldo"],
             ["diagrams/EDT_WBS_FaseI.drawio", "EDT vectorial editable (3 niveles)"],
             ["schedule/Cronograma_CPM_FaseI.gan", "Cronograma CPM editable (GanttProject)"],
-            ["slides/", "Carpeta reservada para diapositivas de defensa (máx. 7 láminas)"],
+            ["diagrams/EDT_WBS_FaseI.png", "EDT en PNG de alta resolución"],
+            ["schedule/Cronograma_CPM_FaseI.pdf", "PDF del CPM con ruta crítica en rojo y holguras"],
+            ["slides/Defensa_Ejecutiva_GA15_RfP.pdf", "Diapositivas ejecutivas de defensa (7 láminas)"],
             ["assets/logo_uide.jpeg", "Logotipo institucional UIDE"],
             ["README.md", "Instrucciones de navegación y roles"],
         ],
