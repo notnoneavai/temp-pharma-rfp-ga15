@@ -6,7 +6,7 @@
 #include <time.h>
 
 constexpr int PIN_SONDA = 4;
-constexpr int PIN_CORTE_WIFI = 14;
+constexpr int PIN_CORTE_ENLACE = 14;
 constexpr int PIN_ALERTA = 27;
 constexpr unsigned long PERIODO_MS = 5000;
 constexpr unsigned long REINTENTO_MS = 5000;
@@ -31,7 +31,7 @@ uint64_t secuencias[CAPACIDAD] = {};
 uint64_t ultimaSecuencia = 0;
 unsigned long ultimaMuestra = 0;
 unsigned long ultimoIntento = 0;
-bool wifiActivo = false;
+bool enlaceInterrumpido = false;
 bool memoriaDisponible = false;
 bool estadoPublicado = false;
 char clienteId[32];
@@ -112,20 +112,18 @@ void publicarPendiente() {
 }
 
 void gestionarRed(unsigned long ahora) {
-  const bool habilitada = digitalRead(PIN_CORTE_WIFI) == LOW;
-  if (habilitada != wifiActivo) {
-    wifiActivo = habilitada;
-    if (habilitada) {
-      WiFi.mode(WIFI_STA);
-      WiFi.begin("Wokwi-GUEST", "", 6);
-      configTime(0, 0, "pool.ntp.org", "time.google.com");
-    } else {
-      WiFi.mode(WIFI_OFF);
+  const bool corteActivo = digitalRead(PIN_CORTE_ENLACE) == HIGH;
+  if (corteActivo != enlaceInterrumpido) {
+    enlaceInterrumpido = corteActivo;
+    if (corteActivo) {
+      conexion.stop();
       estadoPublicado = false;
-      Serial.println("Wi-Fi cortado. El nodo sigue midiendo.");
+      Serial.println("Enlace MQTT cortado. El nodo sigue midiendo.");
+    } else {
+      Serial.println("Enlace MQTT habilitado. Reintentando MQTT.");
     }
   }
-  if (!habilitada || WiFi.status() != WL_CONNECTED) return;
+  if (corteActivo || WiFi.status() != WL_CONNECTED) return;
   if (!mqtt.connected()) {
     estadoPublicado = false;
     if (ahora - ultimoIntento < REINTENTO_MS) return;
@@ -142,7 +140,7 @@ void gestionarRed(unsigned long ahora) {
 
 void setup() {
   Serial.begin(115200);
-  pinMode(PIN_CORTE_WIFI, INPUT_PULLUP);
+  pinMode(PIN_CORTE_ENLACE, INPUT_PULLUP);
   pinMode(PIN_ALERTA, OUTPUT);
   sonda.begin();
   sonda.setResolution(10);
@@ -167,6 +165,10 @@ void setup() {
   mqtt.setKeepAlive(10);
   mqtt.setTimeout(1500);
   mqtt.setWill(ESTADO, "offline", true, 1);
+  WiFi.mode(WIFI_STA);
+  WiFi.setAutoReconnect(true);
+  WiFi.begin("Wokwi-GUEST", "", 6);
+  configTime(0, 0, "pool.ntp.org", "time.google.com");
 }
 
 void loop() {

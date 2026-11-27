@@ -6,7 +6,7 @@
     { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 9.6, "left": 33.6, "attrs": {} },
     { "type": "wokwi-ds18b20", "id": "sonda", "top": -76.8, "left": 313.6, "attrs": { "temperature": "5" } },
     { "type": "wokwi-resistor", "id": "rBus", "top": 33.6, "left": 245.8, "attrs": { "value": "4700" } },
-    { "type": "wokwi-slide-switch", "id": "wifi", "top": 201.2, "left": -136.1, "attrs": { "value": "0", "label": "Corte Wi-Fi" } },
+    { "type": "wokwi-slide-switch", "id": "wifi", "top": 201.2, "left": -136.1, "attrs": { "value": "0", "label": "Corte de enlace MQTT" } },
     { "type": "wokwi-led", "id": "alarma", "top": -42.4, "left": -111.4, "attrs": { "color": "red", "label": "Temperatura fuera de rango" } },
     { "type": "wokwi-resistor", "id": "rLed", "top": 62.4, "left": -120.8, "attrs": { "value": "220" } }
   ],
