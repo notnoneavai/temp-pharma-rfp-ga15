@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "author": "Equipo 3",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": 9.6, "left": 33.6, "attrs": {} },
+    { "type": "wokwi-ds18b20", "id": "sonda", "top": -76.8, "left": 313.6, "attrs": { "temperature": "5" } },
+    { "type": "wokwi-resistor", "id": "rBus", "top": 33.6, "left": 245.8, "attrs": { "value": "4700" } },
+    { "type": "wokwi-slide-switch", "id": "wifi", "top": 201.2, "left": -136.1, "attrs": { "value": "0", "label": "Corte Wi-Fi" } },
+    { "type": "wokwi-led", "id": "alarma", "top": -42.4, "left": -111.4, "attrs": { "color": "red", "label": "Temperatura fuera de rango" } },
+    { "type": "wokwi-resistor", "id": "rLed", "top": 62.4, "left": -120.8, "attrs": { "value": "220" } }
+  ],
+  "connections": [
+    ["sonda:VCC", "esp:3V3", "red", []],
+    ["sonda:GND", "esp:GND.1", "black", []],
+    ["sonda:DQ", "esp:D4", "green", []],
+    ["rBus:1", "sonda:DQ", "green", []],
+    ["rBus:2", "sonda:VCC", "red", []],
+    ["wifi:2", "esp:D14", "blue", []],
+    ["wifi:1", "esp:GND.2", "black", []],
+    ["alarma:C", "esp:GND.2", "black", []],
+    ["alarma:A", "rLed:1", "orange", []],
+    ["rLed:2", "esp:D27", "orange", []]
+  ],
+  "dependencies": {}
+}
